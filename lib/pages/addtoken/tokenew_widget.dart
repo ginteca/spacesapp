@@ -91,6 +91,7 @@ class _RegisterPropertyScreenState extends State<RegisterPropertyScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Registrar Propiedad'),
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: SingleChildScrollView(
         child: Column(

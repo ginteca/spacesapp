@@ -113,7 +113,7 @@ class _AlertHistoryScreen3State extends State<AlertHistoryScreen3> {
           : Colors.red, // Azul oscuro si no hay alertas
       appBar: AppBar(
         title: Text('Vecino Vigilante'),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
         elevation: 0,
       ),
       body: FutureBuilder<List<Alert>>(

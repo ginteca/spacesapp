@@ -52,7 +52,7 @@ class GenerarAccesoPage extends StatelessWidget {
         ),
         title: Text('GENERAR ACCESO'),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
         elevation: 0,
       ),
       body: Stack(

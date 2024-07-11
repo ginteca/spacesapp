@@ -110,7 +110,7 @@ class _AlertHistoryScreen1State extends State<AlertHistoryScreen1> {
           Color(0xFF780000), // Fondo rojo según la imagen proporcionada
       appBar: AppBar(
         title: Text('Vecino Vigilante'),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
         elevation: 0,
       ),
       body: FutureBuilder<List<Alert>>(

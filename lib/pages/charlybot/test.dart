@@ -61,6 +61,7 @@ class ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Chat de Flutter"),
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: Column(
         children: <Widget>[

@@ -300,7 +300,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         });
       }
 
-      return jsonResponse;
+      return jsonEncode(jsonResponse);
     } else {
       throw Exception('Error al realizar la petición POST');
     }
@@ -827,12 +827,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 BarControlScreen()), // Página específica para este usuario
       );
 
-      return 'Logged in as bar';
+      return jsonEncode('Logged in as bar');
     } else if (user == 'restaurant@clubdegolf.com' && password == '123456') {
       // Acción específica para este usuario
       print('Acción específica para restaurant@clubdegolf.com');
 
-      return 'Logged in as restaurant';
+      return jsonEncode('Logged in as restaurant');
     } else if (user == 'caddy@clubdegolf.com' && password == '123456') {
       // Acción específica para este usuario
       print('Acción específica para caddy@clubdegolf.com');
@@ -843,7 +843,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 CaddyeApp()), // Página específica para este usuario
       );
 
-      return 'Logged in as caddy';
+      return jsonEncode('Logged in as caddy');
     }
 
     Map<String, String> data = {'user': user, 'password': password};
@@ -1034,7 +1034,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         });
       }
 
-      return jsonResponse;
+      return jsonEncode(jsonResponse);
     } else {
       throw Exception('Error al realizar la petición POST');
     }

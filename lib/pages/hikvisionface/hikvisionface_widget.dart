@@ -59,6 +59,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Upload Image'),
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

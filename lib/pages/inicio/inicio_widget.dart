@@ -47,7 +47,7 @@ class _InicioWidgetState extends State<InicioWidget>
   late String _imagenProfile;
   late String _roleUser;
   late String _imagenPropiedad;
-  late String _idPropiedad;
+  late String _idPropiedad = '';
   late String _idUsuario;
   late String _accessCode;
   final scaffoldKey = GlobalKey<ScaffoldState>();

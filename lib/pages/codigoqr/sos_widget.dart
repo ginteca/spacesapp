@@ -113,7 +113,7 @@ class _AlertHistoryScreenState extends State<AlertHistoryScreen> {
           : Colors.red, // Azul oscuro si no hay alertas
       appBar: AppBar(
         title: Text('S.O.S'),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
         elevation: 0,
       ),
       body: FutureBuilder<List<Alert>>(

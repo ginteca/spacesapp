@@ -54,6 +54,7 @@ class HikvisionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Hikvision'),
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: Center(
         child: Column(

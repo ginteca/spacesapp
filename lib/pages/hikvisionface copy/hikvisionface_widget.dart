@@ -186,6 +186,7 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Subir Imagen'),
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: Center(
         child: Column(

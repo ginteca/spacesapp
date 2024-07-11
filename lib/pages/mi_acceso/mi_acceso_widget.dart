@@ -128,8 +128,10 @@ class _MiAccesoWidgetState extends State<MiAccesoWidget> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.transparent,
+      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
     ));
+
+
 
     final responseJson = widget.responseJson;
 

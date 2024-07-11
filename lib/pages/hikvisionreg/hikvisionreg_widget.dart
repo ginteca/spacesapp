@@ -75,6 +75,7 @@ class _HikvisionRegScreenState extends State<HikvisionRegScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('HikvisionReg'),
+        backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
