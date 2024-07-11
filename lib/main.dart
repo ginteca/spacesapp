@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +7,7 @@ import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +39,11 @@ class _MyAppState extends State<MyApp> {
     _router = createRouter(_appStateNotifier);
     initOneSignal();
     obtenerPlayerId(); // Llama a obtenerPlayerId en initState
+
+    // Set the status bar color
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+    ));
   }
 
   void initOneSignal() async {
@@ -138,9 +143,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
-    ));
     return MaterialApp.router(
       title: 'spacesclub',
       localizationsDelegates: [
@@ -156,6 +158,39 @@ class _MyAppState extends State<MyApp> {
       themeMode: _themeMode,
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
+    );
+  }
+}
+
+// Extend StatelessWidget or StatefulWidget to set the status bar color
+class BaseWidget extends StatelessWidget {
+  final Widget child;
+
+  BaseWidget({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+    ));
+
+    return child;
+  }
+}
+
+// Usage example in any of your views
+class HomeView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BaseWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+        ),
+        body: Center(
+          child: Text('Home View'),
+        ),
+      ),
     );
   }
 }
