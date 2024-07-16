@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_auth/http_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../hikvisionface/hikvisionface_widget.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,16 +26,34 @@ class HikvisionRegScreen extends StatefulWidget {
 }
 
 class _HikvisionRegScreenState extends State<HikvisionRegScreen> {
-  final TextEditingController tokenController = TextEditingController();
   final TextEditingController aliasController = TextEditingController();
+  String? userNeighborId;
 
-  Future<void> enviarDatos(String token, String alias) async {
+  @override
+  void initState() {
+    super.initState();
+    _loadUserNeighborId();
+  }
+
+  Future<void> _loadUserNeighborId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userNeighborId = prefs.getString('idUsuario');
+    });
+  }
+
+  Future<void> enviarDatos(String alias) async {
+    if (userNeighborId == null) {
+      print('Error: UserNeighborId no está disponible');
+      return;
+    }
+
     final String apiUrl6 =
-        'http://4.151.55.143/ISAPI/AccessControl/UserInfo/Record?format=json&devIndex=37623F1A-7D9D-6940-9D7D-DC6F69245789';
+        'http://4.151.55.143/ISAPI/AccessControl/UserInfo/Record?format=json&devIndex=8183A216-45CC-014D-946D-415764A1C0C7';
     final Map<String, dynamic> userInfo = {
       "UserInfo": [
         {
-          "employeeNo": token,
+          "employeeNo": userNeighborId,
           "name": alias,
           "userType": "normal",
           "Valid": {
@@ -61,6 +82,10 @@ class _HikvisionRegScreenState extends State<HikvisionRegScreen> {
       if (response.statusCode == 200) {
         print("Datos enviados exitosamente");
         print(response.body);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ImageUploadScreen()),
+        );
       } else {
         print("Error al enviar los datos: ${response.statusCode}");
         print(response.body);
@@ -74,7 +99,7 @@ class _HikvisionRegScreenState extends State<HikvisionRegScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('HikvisionReg'),
+        title: Text('Bienvenido al registro de Hikvision'),
         backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
       body: Padding(
@@ -82,19 +107,19 @@ class _HikvisionRegScreenState extends State<HikvisionRegScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              controller: tokenController,
-              decoration: InputDecoration(labelText: 'Token'),
+            Text(
+              'Ingresa tu nombre completo',
+              style: TextStyle(fontSize: 18),
             ),
             TextField(
               controller: aliasController,
-              decoration: InputDecoration(labelText: 'Alias'),
+              decoration: InputDecoration(labelText: 'Nombre completo'),
             ),
             ElevatedButton(
               onPressed: () {
-                enviarDatos(tokenController.text, aliasController.text);
+                enviarDatos(aliasController.text);
               },
-              child: Text('Enviar Datos'),
+              child: Text('Siguiente'),
             ),
           ],
         ),

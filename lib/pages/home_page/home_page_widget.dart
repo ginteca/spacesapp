@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../addtoken/addtoken_widget.dart';
 import '../dashvigilante/dash_widget.dart';
+import '../hikvisionreg/hikvisionreg_widget.dart';
 import '../inicio/bar.dart';
 import '../inicio/caddie.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -42,12 +43,35 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     String? password1 = prefs.getString('password');
     bool autoLogin = prefs.getBool('autoLogin') ?? true;
     bool useBiometrics = prefs.getBool('useBiometrics') ?? false;
+    String? userNeighborId = prefs.getString('idUsuario'); // Cambio a String
 
     if (email1 != null && password1 != null) {
       print('Ya se ha iniciado sesión antes');
       print(email1);
       print(password1);
 
+      if (userNeighborId != null) {
+        final response = await http.get(Uri.parse(
+            'https://jaus.azurewebsites.net/hikregister.php?UserNeighbor_Id=$userNeighborId'));
+
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+          bool hikregister = responseData['hikregister'] == '1';
+
+          if (!hikregister) {
+            // Redirigir a la página específica si hikregister es false
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      HikvisionRegScreen()), // Página específica
+            );
+            return;
+          }
+        } else {
+          print('Error al obtener el valor de hikregister');
+        }
+      }
       if (email1 == 'bar@clubdegolf.com' && password1 == '123456') {
         // Acción específica para este usuario
         print('Acción específica para bar@clubdegolf.com');

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,33 +28,86 @@ class ImageUploadScreen extends StatefulWidget {
 class _ImageUploadScreenState extends State<ImageUploadScreen> {
   File? _image;
   final _picker = ImagePicker();
-  final _employeeNoController = TextEditingController();
+  String? _employeeNo;
 
-  Future chooseImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  @override
+  void initState() {
+    super.initState();
+    _loadEmployeeNo();
+  }
 
+  Future<void> _loadEmployeeNo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
+      _employeeNo = prefs.getString('idUsuario');
     });
   }
 
-  Future<void> uploadImage() async {
+  Future<void> chooseImage() async {
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      preferredCameraDevice: CameraDevice.front,
+    );
+
+    if (pickedFile != null) {
+      // Reduce the quality of the image
+      final tempDir = await getTemporaryDirectory();
+      final path = tempDir.path;
+      var result = await FlutterImageCompress.compressAndGetFile(
+        pickedFile.path,
+        '$path/${DateTime.now().millisecondsSinceEpoch}.jpg',
+        quality: 10,
+      );
+
+      setState(() {
+        _image = result != null ? File(result.path) : null;
+      });
+    } else {
+      print('No image selected.');
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_image == null || _employeeNo == null) {
+      print('No image or employee number to upload.');
+      _showDialog('Error', 'No image or employee number to upload.');
+      return;
+    }
+
     var uri = Uri.parse('https://habitan-t.com/test.php'); // Cambia a tu URL
     var request = http.MultipartRequest('POST', uri)
-      ..fields['employeeNo'] = _employeeNoController.text
+      ..fields['employeeNo'] = _employeeNo!
       ..files.add(await http.MultipartFile.fromPath('image', _image!.path));
 
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      print('Upload successful');
+      var responseData = await response.stream.bytesToString();
+      _showDialog('Upload successful', responseData);
     } else {
-      print('Upload failed');
+      var responseData = await response.stream.bytesToString();
+      _showDialog('Upload failed', responseData);
     }
+  }
+
+  void _showDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -61,25 +117,23 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
         title: Text('Upload Image'),
         backgroundColor: Color.fromRGBO(3, 16, 145, 1),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _image == null ? Text('No image selected.') : Image.file(_image!),
-          TextField(
-            controller: _employeeNoController,
-            decoration: InputDecoration(
-              labelText: 'Employee No',
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _image == null ? Text('No image selected.') : Image.file(_image!),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: chooseImage,
+              child: Text('Take Photo'),
             ),
-          ),
-          ElevatedButton(
-            onPressed: chooseImage,
-            child: Text('Choose Image'),
-          ),
-          ElevatedButton(
-            onPressed: uploadImage,
-            child: Text('Upload Image'),
-          ),
-        ],
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _uploadImage,
+              child: Text('Upload Image'),
+            ),
+          ],
+        ),
       ),
     );
   }
