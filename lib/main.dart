@@ -41,9 +41,9 @@ class _MyAppState extends State<MyApp> {
     obtenerPlayerId(); // Llama a obtenerPlayerId en initState
 
     // Set the status bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+    //   statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+    // ));
   }
 
   void initOneSignal() async {
@@ -170,9 +170,6 @@ class BaseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
-    ));
 
     return child;
   }

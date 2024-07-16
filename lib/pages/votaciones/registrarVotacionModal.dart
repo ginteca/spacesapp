@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class registrarVotacionPage extends StatefulWidget {
   final responseJson;
@@ -13,6 +14,7 @@ class registrarVotacionPage extends StatefulWidget {
   final String estatus;
   final bool registroVotacion;
   final VoidCallback onVotacionSuccess;
+  final Future<void> Function() getVotacion;
   const registrarVotacionPage({
     Key? key,
     required this.responseJson,
@@ -25,6 +27,7 @@ class registrarVotacionPage extends StatefulWidget {
     required this.estatus,
     required this.registroVotacion,
     required this.onVotacionSuccess,
+    required this.getVotacion,
   });
   @override
   _registrarVotacionPage createState() => _registrarVotacionPage();
@@ -42,7 +45,26 @@ class _registrarVotacionPage extends State<registrarVotacionPage> {
     super.initState();
   }
 
+  List<String> listId = [];
+
+  Future<List<String>> getIdVotacionList() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('idVotacionList') ?? [];
+  }
+
+  Future<void> addIdVotacion(String newIdVotacion) async {
+  List<String> idVotacionList = await getIdVotacionList();
+  idVotacionList.add(newIdVotacion);
+  await saveIdVotacionList(idVotacionList);
+}
+
+  Future<void> saveIdVotacionList(List<String> idVotacionList) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('idVotacionList', idVotacionList);
+  }
+
   Future<String> registrarVotacion() async {
+    final prefs = await SharedPreferences.getInstance();
     //Usuario
     String _idUser = widget.responseJson['Data'][0]['Value'];
     Map<String, dynamic> data0 = jsonDecode(_idUser);
@@ -68,20 +90,19 @@ class _registrarVotacionPage extends State<registrarVotacionPage> {
         body: data);
 
     if (response.statusCode == 200) {
-      print('Aqui inicia');
-      print(idUser);
-      print(propertyId);
-      print(idVotacion);
-      print(opcionId);
-
-      print(response.body);
+      await addIdVotacion(idVotacion);
+      await widget.getVotacion();
+    // Imprimir la lista actualizada para verificar
+    List<String> updatedList = await getIdVotacionList();
+    print("asi quedo la lisya bro");
+    print(updatedList);
       var jsonResponse = jsonDecode(response.body);
       print('hello buey');
       print(jsonResponse);
       print(propertyId);
       if (jsonResponse['Message'] == 'Created') {
         print("si quedo");
-
+        await widget.getVotacion();
         //Navigator.push(
         //context,
         //MaterialPageRoute(

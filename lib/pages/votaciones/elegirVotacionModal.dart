@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spacesclub/pages/votaciones/registrarVotacionModal.dart';
 import 'package:http/http.dart' as http;
 import '../../flutter_flow/flutter_flow_util.dart';
@@ -31,11 +32,33 @@ class _elegirVotacionesModal extends State<elegirVotacionesModal> {
   late String idAssociation;
 
   List<dynamic> news = [];
+  List<String> idVotacionList = [];
 
   @override
   void initState() {
     super.initState();
+    loadIdVotacionList();
     getVote();
+    
+  }
+
+  Future<void> newFunction() async {
+    loadIdVotacionList();
+    getVote();
+  }
+
+  Future<void> loadIdVotacionList() async {
+    idVotacionList = await getIdVotacionList();
+    setState(() {});
+  }
+
+  Future<List<String>> getIdVotacionList() async {
+    final prefs = await SharedPreferences.getInstance();
+    idVotacionList =  prefs.getStringList('idVotacionList') ?? [];
+    print("abajo wey");
+    print(idVotacionList);
+    return prefs.getStringList('idVotacionList') ?? [];
+  
   }
 
   Future<void> getVote() async {
@@ -84,7 +107,10 @@ class _elegirVotacionesModal extends State<elegirVotacionesModal> {
     final responseJson = widget.responseJson;
     final _idUsuario = widget.idUsuario;
     final _idPropiedad = widget.idPropiedad;
-
+    List<dynamic> filteredNews = news.where((votacion) {
+      final idVotacion = votacion['Id'].toString();
+      return !idVotacionList.contains(idVotacion);
+    }).toList();
     return Container(
         child: SingleChildScrollView(
             child: Container(
@@ -98,9 +124,9 @@ class _elegirVotacionesModal extends State<elegirVotacionesModal> {
                 ),
                 decoration: BoxDecoration(color: Colors.white10),
                 child: ListView.builder(
-                    itemCount: news.length,
+                    itemCount: filteredNews.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final votacion = news[index];
+                      final votacion = filteredNews[index];
                       final idVotacion = votacion['Id'].toString();
                       final titulo = votacion['Title'] as String;
                       final fecha = votacion['RegisterDate'] as String;
@@ -116,7 +142,6 @@ class _elegirVotacionesModal extends State<elegirVotacionesModal> {
                       List<Widget> opcionesWidgets = [];
                       final listaOpciones =
                           votacion['OptionsList'] as List<dynamic>;
-
                       registroVotacion = false;
                       if (estatus == 'Active') if (registroVotacion == false)
                         return Container(
@@ -240,7 +265,7 @@ class _elegirVotacionesModal extends State<elegirVotacionesModal> {
                                               setState(() {
                                                 registroVotacion = true;
                                               });
-                                            },
+                                            }, getVotacion: newFunction,
                                           ),
                                         ],
                                       ),

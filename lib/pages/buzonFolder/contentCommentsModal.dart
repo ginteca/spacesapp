@@ -33,14 +33,75 @@ class contentComents extends StatefulWidget {
 }
 
 class _contentComents extends State<contentComents> {
+  late List<dynamic> messages = [];
+  TextEditingController _textFieldController = TextEditingController();
+   @override
+  void initState() {
+    super.initState();
+    messages = widget.messages;
+    getCommentBuzon();
+  }
+
+  @override
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
+  }
   late String idUser;
   late String propertyId;
   late String commenBuzon;
   late String idUser2;
-
+  List<dynamic> buzon = [];
   String selectedText2 = '';
   final String apiSaveComments =
       "https://appaltea.azurewebsites.net/api/Mobile/SaveReplayCommmentboxUser/";
+
+  Future<void> getCommentBuzon() async {
+    final url = "https://appaltea.azurewebsites.net/api/Mobile/GetCommentBox/";
+    String _idProperty = widget.responseJson['Data'][1]['Value'];
+    Map<String, dynamic> data1 = jsonDecode(_idProperty);
+    final idProperty = data1['Id'].toString();
+    final type = data1['Type'].toString();
+    final associationId = data1['Assocation']['Id'] as int;
+    final idAssociation = associationId.toString();
+    final body = {
+      'idProperty': idProperty,
+      'AssociationId': idAssociation,
+      'UserType': type
+    };
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      // La solicitud fue exitosa, analiza la respuesta JSON
+      final parsedJson = json.decode(response.body);
+      final dataList = parsedJson['Data'] as List<dynamic>;
+      final buzonList = json.decode(dataList[0]['Value']) as List<dynamic>;
+
+        buzon = buzonList;
+        for (var noticia in buzon) {
+        if (noticia['Id'].toString() == widget.idUser) {
+          setState(() {
+          messages = noticia['Messages'] as List<dynamic>;});
+          break;
+        }
+        setState(() {});
+      }
+  
+      //codigoacceso
+
+      // setText();
+    } else {
+      // La solicitud falló
+      print('No entro a la Api');
+      print('Error en la solicitud. Código de estado: ${response.statusCode}');
+    }
+  }
+
 
   Future<String> enviarComment() async {
     String _idUser = widget.responseJson['Data'][0]['Value'];
@@ -66,6 +127,8 @@ class _contentComents extends State<contentComents> {
     if (response.statusCode == 200) {
       var codeApiResponse = jsonDecode(response.body);
       print('hello buey');
+      getCommentBuzon();
+      selectedText2 = "".toString();
       print(idUser);
       print(propertyId);
       return codeApiResponse;
@@ -82,7 +145,7 @@ class _contentComents extends State<contentComents> {
     int numExt = widget.number;
     String content = widget.content;
     final image = widget.image;
-    final List<dynamic> messages = widget.messages;
+    //final List<dynamic> messages = widget.messages;
     String idUser3 = widget.idUser;
 
     return Container(
@@ -342,7 +405,7 @@ class _contentComents extends State<contentComents> {
                                                     final content =
                                                         message['Content']
                                                             as String;
-                                                    print("$message");
+                                                    print("hello bobo"+ "$message");
                                                     return Container(
                                                       child: Padding(
                                                         padding: EdgeInsets.only(
@@ -387,6 +450,7 @@ class _contentComents extends State<contentComents> {
                                           children: [
                                             TextField(
                                               //controller: textFieldEnviarComment,
+                                              controller: _textFieldController,
                                               onChanged: (value) {
                                                 setState(() {
                                                   selectedText2 = value;
@@ -417,7 +481,12 @@ class _contentComents extends State<contentComents> {
                                               right: 0,
                                               child: IconButton(
                                                 onPressed: () {
+                                                  
                                                   enviarComment();
+                                                  Future.delayed(const Duration(seconds: 3));
+                                                  getCommentBuzon();
+                                                  _textFieldController.clear();  
+                                                  setState(() {});
                                                 },
                                                 icon: Icon(Icons.send),
                                               ),

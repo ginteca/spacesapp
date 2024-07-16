@@ -133,7 +133,10 @@ class _InicioWidgetState extends State<InicioWidget>
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+       statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+     ));
     final responseJson = widget.responseJson;
 
     return Scaffold(
