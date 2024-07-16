@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spacesclub/pages/buzonFolder/contentCommentsModal.dart';
 import 'package:http/http.dart' as http;
@@ -127,6 +128,7 @@ class _contentBuzon extends State<contentBuzon> {
 
     if (response.statusCode == 200) {
       var codeApiResponse = jsonDecode(response.body);
+      getCommentBuzon();
       print('hello buey');
       print(idUser);
       print(propertyId);
@@ -138,6 +140,9 @@ class _contentBuzon extends State<contentBuzon> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+       statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+     ));
     return Container(
       child: Column(
         children: [
@@ -743,7 +748,8 @@ class _contentBuzon extends State<contentBuzon> {
               quejaModal(
                 responseJson: responseJson,
                 idUsuario: idUsuario,
-                idPropiedad: idPropiedad,
+                idPropiedad: idPropiedad, 
+                fetchBuzon: getCommentBuzon,
               )
             ],
           ),

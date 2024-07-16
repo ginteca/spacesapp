@@ -6,11 +6,13 @@ class quejaModal extends StatefulWidget {
   final responseJson;
   final idUsuario;
   final idPropiedad;
+  final Future<void> Function() fetchBuzon;
   const quejaModal({
     Key? key,
     required this.responseJson,
     required this.idUsuario,
     required this.idPropiedad,
+    required this.fetchBuzon,
   });
   @override
   _quejaModalState createState() => _quejaModalState();
@@ -62,6 +64,7 @@ class _quejaModalState extends State<quejaModal> {
         body: data);
 
     if (response.statusCode == 200) {
+      await widget.fetchBuzon();
       var codeApiResponse = jsonDecode(response.body);
       print('hello buey');
       print(idUser);
@@ -204,6 +207,7 @@ class _quejaModalState extends State<quejaModal> {
                                   onPressed: () {
                                     enviarQoS();
                                     textFieldEnviarComment.clear();
+                                    Navigator.of(context).pop();
                                   },
                                   style: ButtonStyle(
                                       backgroundColor:

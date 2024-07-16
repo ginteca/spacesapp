@@ -136,7 +136,6 @@ class _avisosPage extends State<avisosPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return Container(
       child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -456,6 +455,9 @@ class barranavegacion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+       statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+     ));
     return SafeArea(
       child: Container(
         color: Colors.white,
