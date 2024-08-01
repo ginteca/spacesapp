@@ -1,44 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:spacesclub/pages/control_acceso/contolpage.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
+
+class GenerarAccesoPage extends StatefulWidget {
+  final responseJson;
+  final idUsuario;
+  final idPropiedad;
+
+  const GenerarAccesoPage({
+    Key? key,
+    required this.responseJson,
+    required this.idPropiedad,
+    required this.idUsuario,
+  }) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.blue[900],
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue[900],
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.grey,
-          ),
-        ),
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.blue[900],
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue[900],
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.grey,
-          ),
-        ),
-      ),
-      themeMode: ThemeMode.light, // Cambia a ThemeMode.dark para el modo oscuro
-      home: GenerarAccesoPage(),
-    );
-  }
+  State<GenerarAccesoPage> createState() => _GenerarAccesoPageState();
 }
 
-class GenerarAccesoPage extends StatelessWidget {
+class _GenerarAccesoPageState extends State<GenerarAccesoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,7 +217,7 @@ class GenerarAccesoPage extends StatelessWidget {
                                           return AlertDialog(
                                             title: Text('Error'),
                                             content: Text(
-                                                'No tienes acceso a www.habitan-t.com/API/MOBILE/ACCESOSPACES'),
+                                                'No tienes acceso a www.habitan-t.com/API/MOBILE/ACCESOSPACES, ora'),
                                             actions: [
                                               TextButton(
                                                 child: Text('OK'),
@@ -269,7 +249,7 @@ class GenerarAccesoPage extends StatelessWidget {
                                   onPressed: () {
                                     // Aquí puedes agregar la lógica para verificar el acceso a la URL
                                     bool hasAccess =
-                                        false; // Suponiendo que no tiene acceso
+                                        true; // Suponiendo que no tiene acceso
 
                                     if (!hasAccess) {
                                       showDialog(
@@ -278,7 +258,7 @@ class GenerarAccesoPage extends StatelessWidget {
                                           return AlertDialog(
                                             title: Text('Error'),
                                             content: Text(
-                                                'No tienes acceso a www.habitan-t.com/API/MOBILE/ACCESOSPACES'),
+                                                'No tienes acceso a www.habitan-t.com/API/MOBILE/ACCESOSPACES ora jajaj'),
                                             actions: [
                                               TextButton(
                                                 child: Text('OK'),
@@ -291,8 +271,12 @@ class GenerarAccesoPage extends StatelessWidget {
                                         },
                                       );
                                     } else {
-                                      // Lógica en caso de tener acceso
-                                      // Puedes agregar la acción para ver historial de códigos aquí
+                                      
+                                       Navigator.push(context, MaterialPageRoute(
+                                         builder: (context) => ControlAccesoPage(
+                                           responseJson: widget.responseJson, idPropiedad: widget.idPropiedad, idUsuario: widget.idUsuario
+                                           )
+                                         ));
                                     }
                                   },
                                   child: Text('VER HISTORIAL DE CÓDIGOS'),

@@ -250,7 +250,7 @@ class _InicioWidgetState extends State<InicioWidget>
                   ),
                 ),
                 Text(
-                  _nombreUsuario,
+                  "_nombreUsuario",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -748,7 +748,8 @@ class _InicioWidgetState extends State<InicioWidget>
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            GenerarAccesoPage()),
+      
+                                            GenerarAccesoPage(idPropiedad: _idPropiedad, idUsuario: _idUsuario, responseJson: responseJson,)),
                                   );
                                 },
                                 icon: Image.asset(
@@ -985,7 +986,7 @@ class barranavegacion extends StatelessWidget {
                 icon: Image.asset(
                   'assets/images/CARRITO.png',
                   width: MediaQuery.of(context).size.width * 0.10,
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.035,
                 ),
                 label: 'Carrito',
               ),

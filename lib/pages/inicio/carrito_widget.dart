@@ -114,7 +114,7 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Carrito de golf eléctrico para 2 pasajeros modelo',
+                      devices,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.grey),
                     ),

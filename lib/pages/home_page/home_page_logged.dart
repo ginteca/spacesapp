@@ -43,16 +43,20 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
     _model2.textFieldforgotpassController ??= TextEditingController();
 
     // Configurar el modo de inmersión
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+       statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+     ));
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
           child: Container(
             height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).secondaryBackground,
               image: DecorationImage(
@@ -64,17 +68,24 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
             ),
             child: Column(
               children: [
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(70.0, 115.0, 70.0, 35.0),
-                  child: Image.asset('assets/images/Logo3.png'),
-                ),
-                Text(
+                LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Container(
+                        width: constraints.maxWidth * 0.5,  // 10% del ancho del contenedor padre
+                        child: AspectRatio(
+                          aspectRatio: 1,  // Mantener la relación de aspecto 1:1 para la imagen
+                          child: Image.asset('assets/images/Logo3.png'),
+                        ),
+                      );
+                    },
+                  ),
+                const Text(
                   '¡BIENVENIDO!',
                   style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontFamily: 'Helvetica'),
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontFamily: 'Helvetica',
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -131,16 +142,14 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                         ),
                       ),
                       Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(5.0, 8.0, 0.0, 0.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(5.0, 8.0, 0.0, 0.0),
                         child: Text(
                           'Ingresa tu Face Id',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: Color.fromRGBO(0, 229, 231, 1), fontSize: 18),
                         ),
                       ),
                       Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 25.0, 0.0, 0.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 25.0, 0.0, 0.0),
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.7,
                           child: Column(
@@ -161,9 +170,7 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                                       });
                                     },
                                     icon: Icon(
-                                      _obscureText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
+                                      _obscureText ? Icons.visibility : Icons.visibility_off,
                                       color: Color.fromARGB(255, 255, 255, 255),
                                     ),
                                   ),
@@ -191,8 +198,7 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                                       color: Colors.white,
                                     ),
                                 textAlign: TextAlign.start,
-                                validator: _model2
-                                    .textFieldPasswordControllerValidator
+                                validator: _model2.textFieldPasswordControllerValidator
                                     ?.asValidator(context),
                               ),
                             ],
@@ -200,20 +206,17 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 30.0, 0.0, 10.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 10.0),
                         child: FFButtonWidget(
                           onPressed: () async {
-                            if (_passwordController.text.trim() ==
-                                pass.toString()) {
+                            if (_passwordController.text.trim() == pass.toString()) {
                               login();
                             } else {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return Dialog(
-                                    backgroundColor:
-                                        Color.fromARGB(186, 243, 243, 243),
+                                    backgroundColor: Color.fromARGB(186, 243, 243, 243),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
@@ -223,19 +226,18 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                                         children: [
                                           Container(
                                             width: 800,
-                                            color: Color.fromRGBO(
-                                                0, 15, 36, 0.308),
+                                            color: Color.fromRGBO(0, 15, 36, 0.308),
                                             child: Column(
                                               children: [
                                                 Text(
                                                   'CREDENCIALES INVALIDAS',
                                                   style: TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 7, 236, 225),
-                                                      fontSize: 21,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
+                                                    color: Color.fromARGB(
+                                                        255, 7, 236, 225),
+                                                    fontSize: 21,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -245,8 +247,9 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                                               'Revisa si las credenciales proporcionadas son las correctas.',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: Colors.white),
+                                                fontSize: 17,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -261,10 +264,8 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                           options: FFButtonOptions(
                             width: 150.0,
                             height: 40.0,
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
+                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                             color: Color(0xFF011D45),
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleMedium
@@ -290,8 +291,9 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                           child: Text(
                             '¿Olvidaste tu contraseña?',
                             style: TextStyle(
-                                color: Color.fromARGB(197, 255, 255, 255),
-                                fontFamily: 'Helvetica'),
+                              color: Color.fromARGB(197, 255, 255, 255),
+                              fontFamily: 'Helvetica',
+                            ),
                           ),
                         ),
                       ),
@@ -299,8 +301,7 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
                           onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
                             await prefs.clear();
                             Navigator.pushReplacement(
                               context,
@@ -311,9 +312,10 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                           child: Text(
                             '¿No eres $nombre?',
                             style: TextStyle(
-                                color: Color.fromRGBO(0, 229, 231, 1),
-                                fontFamily: 'Helvetica',
-                                fontSize: 18),
+                              color: Color.fromRGBO(0, 229, 231, 1),
+                              fontFamily: 'Helvetica',
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ),
@@ -322,6 +324,7 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                 ),
               ],
             ),
+
           ),
         ),
       ),

@@ -60,6 +60,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
       }
     } else {
       // Manejar error en la solicitud
+      print(response.statusCode);
       print('Error en la solicitud: ${response.reasonPhrase}');
     }
   }
