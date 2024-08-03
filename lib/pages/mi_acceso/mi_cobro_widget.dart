@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:spacesclub/pages/mypayments/mypayments.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../inicio/inicio_widget.dart';
 import 'package:flutter/material.dart';
@@ -389,7 +390,15 @@ class _MiCobroWidgetState extends State<MiCobroWidget> {
                         SizedBox(height: 5),
                         ElevatedButton(
                           onPressed: () {
-                            // Acción para el botón "VER MIS PAGOS"
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => myPaymentsPage(
+                                  idUsuario: widget.idUsuario, 
+                                  responseJson: responseJson, 
+                                  idPropiedad: widget.idPropiedad)
+                                ), 
+                              );
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Color.fromRGBO(1, 29, 69, 1),

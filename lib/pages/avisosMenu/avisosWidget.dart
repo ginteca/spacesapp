@@ -464,7 +464,7 @@ class barranavegacion extends StatelessWidget {
         height: MediaQuery.of(context).size.width * 0.17,
         child: ClipRRect(
           child: BottomNavigationBar(
-            backgroundColor: Color.fromARGB(183, 3, 15, 145),
+            backgroundColor: Color.fromRGBO(3, 16, 145, 1),
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white,
             selectedLabelStyle: TextStyle(
