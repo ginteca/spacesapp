@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class mensajeModal extends StatefulWidget {
@@ -15,8 +16,23 @@ class mensajeModal extends StatefulWidget {
 }
 
 class _mensajeModalState extends State<mensajeModal> {
+
+  late Map<String, dynamic> association;
+
+  @override
+  void initState() {
+    super.initState();
+    // Parse the responseJson to access the Association property
+    var lastPropertyJson = widget.responseJson['Data'].firstWhere((element) => element['Name'] == 'LastProperty')['Value'];
+    Map<String, dynamic> lastPropertyMap = jsonDecode(lastPropertyJson);
+    association = lastPropertyMap['Assocation'];
+    
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("abajo bro");
+   print(association['Id']);
     return Container(
       child: ElevatedButton(
         onPressed: () {
@@ -146,7 +162,84 @@ class _mensajeModalState extends State<mensajeModal> {
                                   height: MediaQuery.of(context).size.height *
                                       0.04),
                               ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        backgroundColor: Color.fromARGB(173, 65, 85, 240),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(27.0), // Bordes redondeados
+                                        ),
+                                        child: StatefulBuilder(
+                                            builder: (BuildContext context, StateSetter setState) {
+                                          return Container(
+                                            height: MediaQuery.of(context).size.height * 0.85,
+                                            width: MediaQuery.of(context).size.width * 1,
+                                            child: Column(children: [
+                                              Container(
+                                                  alignment: Alignment.bottomCenter,
+                                                  height: MediaQuery.of(context).size.height * 0.08,
+                                                  decoration: BoxDecoration(
+                                                      color: Color.fromARGB(255, 159, 159, 159),
+                                                      shape: BoxShape.rectangle,
+                                                      borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(27),
+                                                          topRight: Radius.circular(27))),
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        height:
+                                                            MediaQuery.of(context).size.height * 0.03,
+                                                        child: Align(
+                                                          alignment: Alignment.topRight,
+                                                          child: IconButton(
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            icon: Icon(Icons.cancel_outlined,
+                                                                size: 20,
+                                                                color:
+                                                                    Color.fromARGB(255, 160, 58, 251),
+                                                                shadows: [
+                                                                  Shadow(
+                                                                    offset: Offset(2.0, 2.0),
+                                                                    blurRadius: 3.0,
+                                                                    color: Color.fromARGB(
+                                                                        255, 68, 68, 68),
+                                                                  ),
+                                                                ]),
+                                                            iconSize: 30,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment.center,
+                                                        child: Text(
+                                                          "SELECCIONA A TU SOCIO",
+                                                          style: TextStyle(
+                                                              color: Color(0xFF011D45),
+                                                              fontSize: 12,
+                                                              fontFamily: 'Helvetica',
+                                                              fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )),
+                                              Container(
+                                                child: Column(
+                                                  children: [
+                                                    const Text("data"),
+                                                  ],
+                                                ),
+                                              )
+                                            ]),
+                                          );
+                                        }),
+                                      );
+                                    });
+                                  },
                                   style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.all<Color>(

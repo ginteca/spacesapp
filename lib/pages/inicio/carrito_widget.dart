@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:spacesclub/pages/pedidos/MisPedidos.dart';
 import 'dart:convert';
 import 'pantallareporte.dart';
 
-void main() => runApp(MiApp());
 
-class MiApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: PantallaCarrito(),
-    );
-  }
-}
 
 class PantallaCarrito extends StatefulWidget {
+  final idUsuario;
+  final responseJson;
+  final idPropiedad;
+  const PantallaCarrito({
+    Key? key,
+    required this.idUsuario,  
+    required this.responseJson,
+    required this.idPropiedad,
+  });
   @override
   _PantallaCarritoState createState() => _PantallaCarritoState();
 }
@@ -284,6 +285,9 @@ class _PantallaCarritoState extends State<PantallaCarrito> {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => misPedidosPage(idUsuario: widget.idUsuario, responseJson: widget.responseJson, idPropiedad: widget.idPropiedad)),
+                );
                     // Acción para mis pedidos
                   },
                   child: Text('Mis Pedidos'),

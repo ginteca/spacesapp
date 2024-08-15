@@ -48,6 +48,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
                   child: Text('OK'),
                   onPressed: () {
                     Navigator.of(context).pop();
+                     Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -73,7 +74,7 @@ class _PantallaReporteState extends State<PantallaReporte> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(3, 16, 145, 1),
-        title: Text('Reportar', textAlign: TextAlign.center),
+        title: const Text('Reportar', textAlign: TextAlign.center),
         centerTitle: true,
       ),
       body: Stack(

@@ -501,7 +501,7 @@ class barranavegacion extends StatelessWidget {
               }
               if (index == 1) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PantallaCarrito()),
+                  MaterialPageRoute(builder: (context) => PantallaCarrito(idPropiedad: idPropiedad, idUsuario: idPropiedad, responseJson: responseJson,)),
                 );
               }
             },

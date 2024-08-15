@@ -135,7 +135,12 @@ class _ProfileWidgetState extends State<ProfileWidget>
   late AnimationController _controller;
   late Animation<double> _animation;
   ////////////////////////////
-
+  Future<void> _loadProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _imagenProfile = prefs.getString('fotoPerfil') ?? ''; // Valor predeterminado si no existe
+    });
+  }
   /////////////
 
   final _emailController = TextEditingController();
@@ -252,6 +257,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
   @override
   void initState() {
     super.initState();
+     _loadProfileImage();
     getValoresPropiedad();
 
     // Asignar el valor de widget.idUsuario a idUsuario
@@ -1080,7 +1086,7 @@ class barranavegacion extends StatelessWidget {
               }
               if (index == 1) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PantallaCarrito()),
+                  MaterialPageRoute(builder: (context) => PantallaCarrito(idPropiedad: idPropiedad, idUsuario: idUsuario, responseJson: responseJson,)),
                 );
               }
             },

@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image/image.dart' as img;
+import '../inicio/inicio_widget.dart';
 
 class MyProfileModal extends StatefulWidget {
   final responseJson;
@@ -44,7 +46,27 @@ class _MyProfileModal extends State<MyProfileModal> {
     image = null;
   }
 
+  Future<void> saveProfileImage(String? imagePath) async {
+    print("la de abajo");
+    print(imagePath);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (imagePath != null) {
+      await prefs.setString('fotoPerfil', imagePath);
+      print("imagen guardada");
+      getSharedPreferencesValues();
+      Navigator.popUntil(context, (route) => route.isFirst);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      InicioWidget(responseJson: widget.responseJson),
+                ),
+              );
+    }
+  }
+
   Future<void> getSharedPreferencesValues() async {
+    print("esta cambiando bro");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       fotoPerfil = prefs.getString('fotoPerfil');
@@ -77,19 +99,21 @@ class _MyProfileModal extends State<MyProfileModal> {
         var jsonResponse = jsonDecode(responseString);
         if (jsonResponse['Type'] == 'Success' &&
             jsonResponse['Message'] == 'Updated') {
-          await login(selectedImage);
+           login(selectedImage);
+          
         } else {
           print('Error en la respuesta de la API: ${jsonResponse['Message']}');
+          
         }
       } else {
         print('Error en la petición POST: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error al realizar la petición POST: $e');
+      print('Error al realizar la petición POST se rompip: $e');
     }
   }
 
-  Future<String> login(File? selectedImage) async {
+  Future<void> login(File? selectedImage) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     email = prefs.getString('email');
     pass = prefs.getString('password');
@@ -105,21 +129,20 @@ class _MyProfileModal extends State<MyProfileModal> {
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       print('hello buey');
-      print(jsonResponse);
+      
       String _usuario = jsonResponse['Data'][0]['Value'];
+      print(_usuario);
       Map<String, dynamic> data0 = jsonDecode(_usuario);
       String? _imagenProfile = data0['ImageProfile'];
-      _imagenProfile = selectedImage?.path;
+      
       if (jsonResponse['Type'] == 'Success') {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('fotoPerfil', _imagenProfile!);
-        setState(() {});
+        saveProfileImage(_imagenProfile);
+        
       } else {
         print('valio verdura');
       }
-      return jsonResponse;
     } else {
-      throw Exception('Error al realizar la petición POST');
+      throw Exception('Error al realizar la petición POST chingo');
     }
   }
 
@@ -140,8 +163,17 @@ class _MyProfileModal extends State<MyProfileModal> {
     final pickedImage = await picker.getImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
+      final originalFile = File(pickedImage.path);
+      final originalImage = img.decodeImage(originalFile.readAsBytesSync());
+
+      // Corrige la orientación
+      final fixedImage = img.bakeOrientation(originalImage!);
+
+      final fixedFile = File(pickedImage.path)
+        ..writeAsBytesSync(img.encodeJpg(fixedImage));
+
       setState(() {
-        selectedImage = File(pickedImage.path);
+        selectedImage = fixedFile;
       });
     }
   }
@@ -152,8 +184,17 @@ class _MyProfileModal extends State<MyProfileModal> {
     final pickedImage = await picker.getImage(source: ImageSource.camera);
 
     if (pickedImage != null) {
+      final originalFile = File(pickedImage.path);
+      final originalImage = img.decodeImage(originalFile.readAsBytesSync());
+
+      // Corrige la orientación
+      final fixedImage = img.bakeOrientation(originalImage!);
+
+      final fixedFile = File(pickedImage.path)
+        ..writeAsBytesSync(img.encodeJpg(fixedImage));
+
       setState(() {
-        image = File(pickedImage.path);
+        image = fixedFile;
       });
     }
   }
@@ -235,7 +276,7 @@ class _MyProfileModal extends State<MyProfileModal> {
                                       ElevatedButton(
                                         onPressed: () async {
                                           enviarFoto();
-                                          Navigator.of(context).pop();
+                                          
                                         },
                                         style: ButtonStyle(
                                           backgroundColor:

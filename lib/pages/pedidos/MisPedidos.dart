@@ -15,12 +15,12 @@ import '../reservaciones/reservaWidget.dart';
 import '../mi_acceso/mi_cobro_widget.dart';
 import '../seguridad_home_page/view_SOS.dart';
 
-class myPaymentsPage extends StatefulWidget {
+class misPedidosPage extends StatefulWidget {
   final idUsuario;
   final responseJson;
   final idPropiedad;
 
-  const myPaymentsPage({
+  const misPedidosPage({
     Key? key,
     required this.idUsuario,  
     required this.responseJson,
@@ -28,10 +28,10 @@ class myPaymentsPage extends StatefulWidget {
   });
 
   @override
-  _myPaymentsPage createState() => _myPaymentsPage();
+  _misPedidosPage createState() => _misPedidosPage();
 }
 
-class _myPaymentsPage extends State<myPaymentsPage> {
+class _misPedidosPage extends State<misPedidosPage> {
   String? currentButton;
   final String apiUrl =
       'https://appaltea.azurewebsites.net/api/Mobile/SaveMessageNeighbor/';
@@ -71,7 +71,7 @@ class _myPaymentsPage extends State<myPaymentsPage> {
 
   Future<void> getPayments() async {
     final userNeighborId = widget.idPropiedad;
-    final url = Uri.parse('https://jaus.azurewebsites.net/historialdepagos.php?UserNeighbor_Id=$userNeighborId');
+    final url = Uri.parse('https://jaus.azurewebsites.net/historialcaddy.php?UserProperty_Id=$userNeighborId');
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -142,7 +142,7 @@ class _myPaymentsPage extends State<myPaymentsPage> {
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
           child: Text(
-            'HISTORIAL DE PAGOS',
+            'MIS PEDIDOS',
             style: TextStyle(
               color: Colors.white,
               fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -185,8 +185,8 @@ class _myPaymentsPage extends State<myPaymentsPage> {
               itemCount: news.length,
               itemBuilder: (BuildContext context, int index) {
                 final payment = news[index];
-                final fechaPago = payment['fecha_pago']['date'];
-                final mount = payment['Mount'];
+                final fechaPago = payment['Fecha_inicial']['date'];
+                final mount = payment['Devices'];
                 final status = payment['Status'];
 
                 return Container(
@@ -311,7 +311,7 @@ class _myPaymentsPage extends State<myPaymentsPage> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        "No hay pagos para mostrar",
+                                        "No hay pedidos aun",
                                         style: TextStyle(
                                           fontFamily: 'Helvetica',
                                           fontWeight: FontWeight.bold,

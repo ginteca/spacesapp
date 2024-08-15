@@ -1,0 +1,227 @@
+﻿@model NeighborAssociation.Models.NeighborhoodAssociation
+@{
+    ViewBag.Title = "Panel de control " + Model.Association_Name;
+    string IdAssociation = Session["CurrentAssociation"].ToString();
+}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card" style="display: inline-block;">
+            <div class="card-body">
+                <div class="col-md-1" style="color:#29c75f">
+                    <i class="icon fa fa-building fa-5x"></i>
+                </div>
+                <div class="col-md-8">
+                 
+
+                    <h2 class="title">@Model.Association_Name</h2>
+                    <p>@Model.Association_Name</p>
+                </div>
+                <div class="col-md-3">
+                    @switch (Model.Association_Status)
+                    {
+                        case "Free":
+                            //int days = (int)Model.PlanSubscription.Plan_TestDays - (DateTime.UtcNow - Model.Association_DateSubscription).Value.Days;
+                            int days = (int)Model.PlanSubscription.Plan_TestDays - ((int)Model.PlanSubscription.Plan_TestDays - (Model.Association_DateSubscription - DateTime.UtcNow).Value.Days);
+                <div class="alert alert-info" style="display: inline-block;">
+                    <strong>Versión de prueba</strong>
+                    <br />
+                    Te quedán @days dias de prueba
+                    <a href="/Association/Payment/@Model.Association_Id" class="btn btn-success"><i class="fa fa-credit-card-alt"></i> Pagar suscripción</a>
+                </div>
+break;
+case "NoPay":
+                <div class="alert alert-danger" style="display: inline-block;">
+                    Tu suscrípción esta desactivada por falta de pago
+                    <a href="/Association/Payment/@Model.Association_Id" class="btn btn-success"><i class="fa fa-credit-card-alt"></i> Pagar suscripción</a>
+                </div>
+break;
+case "Active":
+                <div class="alert alert-success" style="display: inline-block;">
+                    <strong>Suscripción activa</strong>
+                    <h4>@Model.PlanSubscription.Plan_Name</h4>
+                    <a href="/Association/Payment/@Model.Association_Id" class="btn btn-success"><i class="fa fa-list"></i> Mis pagos</a>
+                </div>
+break;
+}
+
+
+                </div>
+    
+                </div>
+    
+            </div>
+    
+
+
+        </div>
+    </div>
+<div class="row" style="margin-top:15px;">
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-green-light" href="/Association/Tokens/@IdAssociation" title="Los token permiten el acceso a los vecinos, cada vecino debe registrarse utilizando un token, puedes crear tokens de vecino o vigilante">
+            <div class="card-body">
+                <i class="icon fa fa-key fa-4x"></i>
+                <div class="content">
+                    <div class="title">Tokens de registro</div>
+                    <div class="value"><span class="sign"></span>@ViewBag.NumTokens</div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-blue-light" href="/Association/Neighbors/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-users fa-4x"></i>
+                <div class="content">
+                    <div class="title">Vecinos</div>
+                    <div class="value"><span class="sign"></span>@Model.Token.Where(x => x.Token_Roles.Contains("Vecino") || x.Token_Roles.Contains("Administrador")).Count()</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-yellow-light" href="/Association/Payments/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-money fa-4x"></i>
+                <div class="content">
+                    <div class="title">Pagos</div>
+                    <div class="value"><span class="sign"></span>@Model.PaymentAssociation.Count</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-green-light" href="/Association/Documents/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-book fa-4x"></i>
+                <div class="content">
+                    <div class="title">Documentos</div>
+                    <div class="value"><span class="sign"></span>@Model.DocumentAssociation.Count</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-blue-light" href="/Association/Advices/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-bullhorn fa-4x"></i>
+                <div class="content">
+                    <div class="title">Avisos y noticias</div>
+                    <div class="value"><span class="sign"></span>@Model.NewInAssociation.Count</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-yellow-light" href="/Association/Coupons/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-ticket fa-4x"></i>
+                <div class="content">
+                    <div class="title">Cupones</div>
+                    <div class="value"><span class="sign"></span>@Model.Coupon.Count</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    @*<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+            <a class="card card-banner card-yellow-light" href="/Association/Facilities/@IdAssociation">
+                <div class="card-body">
+                    <i class="icon fa fa-university fa-4x"></i>
+                    <div class="content">
+                        <div class="title">Instalaciones</div>
+                        <div class="value"><span class="sign"></span></div>
+                    </div>
+                </div>
+            </a>
+
+        </div>*@
+
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-green-light" href="/Association/Voting/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-check-square-o fa-4x"></i>
+                <div class="content">
+                    <div class="title">Votaciones</div>
+                    <div class="value"><span class="sign"></span>@Model.Voting.Count</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+   <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-blue-light" href="/Association/VisitCode/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-home fa-4x"></i>
+                <div class="content">
+                    <div class="title">Acceso controlado</div>
+                    <div class="value"><span class="sign"></span>@Model.VigilantPlace.Count</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-yellow-light" href="/Association/vigilant/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-eye fa-4x"></i>
+                <div class="content">
+                    <div class="title">S.O.S. y Vecino vigilante</div>
+                    <div class="value"><span class="sign"></span></div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-green-light" href="/Association/Facilities/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-university fa-4x"></i>
+                <div class="content">
+                    <div class="title">Instalaciones</div>
+                    <div class="value"><span class="sign"></span></div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+        <a class="card card-banner card-blue-light" href="/Association/Tags/@IdAssociation">
+            <div class="card-body">
+                <i class="icon fa fa-car fa-4x"></i>
+                <div class="content">
+                    <div class="title">Tags de acceso</div>
+                    <div class="value"><span class="sign"></span>@ViewBag.NumTags</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("SuperAdmin"))
+        {
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="margin-top:15px;">
+                <a class="card card-banner card-blue-light" href="/Association/Administrators/@IdAssociation">
+                    <div class="card-body">
+                        <i class="icon fa fa-user-secret fa-4x"></i>
+                        <div class="content">
+                            <div class="title">Administradores</div>
+                            <div class="value"><span class="sign"></span></div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        }
+    }
+
+
+</div>
+
+

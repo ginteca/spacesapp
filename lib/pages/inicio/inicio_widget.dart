@@ -57,9 +57,19 @@ class _InicioWidgetState extends State<InicioWidget>
   bool autoLogin = false;
   bool useBiometrics = false;
 
+  Future<void> _loadProfileImage() async {
+    print("buscando imagen en el local");
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  setState(() {
+    _imagenProfile = prefs.getString('fotoPerfil') ?? '';
+    print(_imagenProfile); // Valor predeterminado si no existe
+  });
+}
+
   @override
   void initState() {
     super.initState();
+    _loadProfileImage();
     _loadSwitchState();
     getValoresPropiedad();
     _controller = AnimationController(
@@ -80,7 +90,7 @@ class _InicioWidgetState extends State<InicioWidget>
 
     _nombreUsuario = (data0['Name'] + ' ' + data0['LastName']);
     _tu = 'Socio';
-    _imagenProfile = data0['ImageProfile'];
+    // _imagenProfile = data0['ImageProfile'];
     if (data['Type'] == 'Neighbor') {
       _roleUser = 'Socio';
     } else {
@@ -135,8 +145,8 @@ class _InicioWidgetState extends State<InicioWidget>
   Widget build(BuildContext context) {
     //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-       statusBarColor: Color.fromRGBO(3, 16, 145, 1),
-     ));
+      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+    ));
     final responseJson = widget.responseJson;
 
     return Scaffold(
@@ -250,7 +260,7 @@ class _InicioWidgetState extends State<InicioWidget>
                   ),
                 ),
                 Text(
-                  "_nombreUsuario",
+                  _nombreUsuario,
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -748,8 +758,7 @@ class _InicioWidgetState extends State<InicioWidget>
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) =>
-      
-                                            GenerarAccesoPage(idPropiedad: _idPropiedad, idUsuario: _idUsuario, responseJson: responseJson,)),
+                                            GenerarAccesoPage()),
                                   );
                                 },
                                 icon: Image.asset(
@@ -999,7 +1008,7 @@ class barranavegacion extends StatelessWidget {
               }
               if (index == 1) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => PantallaCarrito()),
+                  MaterialPageRoute(builder: (context) => PantallaCarrito(idPropiedad: idPropiedad, idUsuario: idUsuario, responseJson: responseJson,)),
                 );
               }
             },

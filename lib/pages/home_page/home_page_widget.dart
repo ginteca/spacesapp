@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../addtoken/addtoken_widget.dart';
 import '../dashvigilante/dash_widget.dart';
+import '../hikvisionreg/hikvisionreg_widget.dart';
 import '../inicio/bar.dart';
 import '../inicio/caddie.dart';
+import '../inicio/iniciore.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -35,7 +38,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   late String? email1 = '';
   late String? pass1 = '';
 
-  //PROBAR SI YA SE HA INICADO ANTES
   Future<void> checkLogin() async {
     print('VALIDANDO SI YA SE CREO');
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,12 +45,35 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     String? password1 = prefs.getString('password');
     bool autoLogin = prefs.getBool('autoLogin') ?? true;
     bool useBiometrics = prefs.getBool('useBiometrics') ?? false;
+    String? userNeighborId = prefs.getString('idUsuario'); // Cambio a String
 
     if (email1 != null && password1 != null) {
       print('Ya se ha iniciado sesión antes');
       print(email1);
       print(password1);
 
+      if (userNeighborId != null) {
+        final response = await http.get(Uri.parse(
+            'https://jaus.azurewebsites.net/hikregister.php?UserNeighbor_Id=$userNeighborId'));
+
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+          bool hikregister = responseData['hikregister'] == '1';
+
+          if (!hikregister) {
+            // Redirigir a la página específica si hikregister es false
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      FacialRegistrationScreen()), // Página específica
+            );
+            return;
+          }
+        } else {
+          print('Error al obtener el valor de hikregister');
+        }
+      }
       if (email1 == 'bar@clubdegolf.com' && password1 == '123456') {
         // Acción específica para este usuario
         print('Acción específica para bar@clubdegolf.com');
@@ -1044,8 +1069,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-       statusBarColor: Color.fromRGBO(3, 16, 145, 1),
-     ));
+      statusBarColor: Color.fromRGBO(3, 16, 145, 1),
+    ));
     return Scaffold(
       body: Stack(
         children: [
@@ -1531,6 +1556,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               height:
                                   MediaQuery.of(context).size.height * 0.01),
                           // Botón de inicio de sesión con Apple
+                          if (Platform.isIOS)
                           GestureDetector(
                             onTap: () async {
                               await _signInWithApple();
@@ -1612,8 +1638,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                                   .size
                                                                   .width *
                                                               0.08,
-                                                      color: Color.fromARGB(
-                                                          255, 0, 236, 205),
+                                                      color: Color.fromARGB(255, 255, 255, 255),
                                                       shadows: [
                                                         Shadow(
                                                           offset:
@@ -1629,8 +1654,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                 Text(
                                                   'Política de privacidad',
                                                   style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 7, 236, 225),
+                                                    color: Color.fromARGB(255, 3, 96, 183),
                                                     fontSize:
                                                         MediaQuery.of(context)
                                                                 .size

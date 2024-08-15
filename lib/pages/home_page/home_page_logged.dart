@@ -232,8 +232,7 @@ class _HomePageWidgetLoggedState extends State<HomePageWidgetLogged> {
                                                 Text(
                                                   'CREDENCIALES INVALIDAS',
                                                   style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 7, 236, 225),
+                                                    color: Color.fromARGB(255, 21, 46, 174),
                                                     fontSize: 21,
                                                     fontWeight: FontWeight.bold,
                                                   ),
