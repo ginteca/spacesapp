@@ -1,31 +1,59 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class SelectUserModal extends StatefulWidget {
-  final idUsuario;
-  final idAsociacion;
+  final int idUsuario;
+  final int idAsociacion;
+  
   const SelectUserModal({
     Key? key,
     required this.idUsuario,
     required this.idAsociacion,
-  });
+  }) : super(key: key);
+
   @override
   _SelectUserModalState createState() => _SelectUserModalState();
 }
 
 class _SelectUserModalState extends State<SelectUserModal> {
-
-
+  List<dynamic> usuarios = [];
 
   @override
   void initState() {
     super.initState();
-    
+    print("inicial");
+    _fetchUsuarios();
+  }
+
+  Future<void> _fetchUsuarios() async {
+    print("obteniendo usuarios");
+    final url = Uri.parse('https://appaltea.azurewebsites.net/api/Mobile/GetUsersVigilant');
+    final headers = {"Content-Type": "application/x-www-form-urlencoded"};
+    final body = {
+      "idUser": widget.idUsuario.toString(),
+      "AssociationId": widget.idAsociacion.toString(),
+    };
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        setState(() {
+          usuarios = jsonResponse['Data'] ?? [];
+          print(usuarios);
+        });
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       child: ElevatedButton(
         onPressed: () {
@@ -83,7 +111,7 @@ class _SelectUserModalState extends State<SelectUserModal> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "SELECCIONA A TU SOCIO",
+                                    "SELECCIONA A TU SOCIO ss",
                                     style: TextStyle(
                                         color: Color(0xFF011D45),
                                         fontSize: 12,
@@ -93,13 +121,16 @@ class _SelectUserModalState extends State<SelectUserModal> {
                                 ),
                               ],
                             )),
-                        Container(
-                          child: Column(
-                            children: [
-                              const Text("data"),
-                            ],
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: usuarios.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(usuarios[index]['Name']),
+                              );
+                            },
                           ),
-                        )
+                        ),
                       ]),
                     );
                   }),
